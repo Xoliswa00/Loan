@@ -18,10 +18,7 @@ class LoanApplication extends Model
     return $this->hasOne(Loan::class);
 }
 
-public function loanFee()
-{
-    return $this->hasOne(LoanFee::class);
-}
+
 
 public function repaymentSchedules()
 {
@@ -34,7 +31,9 @@ public function repaymentSchedules()
         return $this->belongsTo(User::class);
     }
 
-        public function fees() {
-    return $this->hasMany(LoanFee::class);
+  public function loanfee()
+{
+    return $this->hasOne(LoanFee::class, 'loan_application_id');
 }
+
 }

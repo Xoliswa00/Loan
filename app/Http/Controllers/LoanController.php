@@ -8,7 +8,11 @@ use App\Models\LoanApplication;
 use App\Models\Loan_fee_rules;
 use Illuminate\Http\Request;
 use app\Models\AccountDetail;
+use app\Models\RepaymentSchedule;
+use App\Models\LoanDisbursement;
+use app\models\Disbursement;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class LoanController extends Controller
 {
@@ -24,11 +28,13 @@ class LoanController extends Controller
             ->paginate(15);
         $loansapp = LoanApplication::where('user_id', $user->id)->latest()
             ->paginate(15);
+                        $disbursements = LoanDisbursement::where('status', 'waiting_for_approval')->get();
+
 
 
       
    
-        return view('loans.index', compact('loans','loansapp'));
+        return view('loans.index', compact('loans','loansapp','disbursements'));
     }
 
     /**
@@ -156,20 +162,85 @@ public function create()
     /**
      * Approve a loan.
      */
-    public function approve(LoanApplication $loan, Request $request)
+    public function approve(Request $request,$id)
     {
         $request->validate([
             'approval_comments' => 'nullable|string',
         ]);
 
-        $loan->update([
-            'status' => 'approved',
-            'approval_comments' => $request->approval_comments,
-            'approver_id' => Auth::id(),
-            'approved_at' => now(),
-        ]);
+      
 
-        return redirect()->route('Admin.index')->with('success', 'Loan approved successfully.');
+          $loanApplication = LoanApplication::findOrFail($id);
+
+        $loanApplication->status ='approved';
+        $loanApplication->approval_date = Now();
+        $loanApplication->reason = $request->approval_comments;
+         $loanApplication->reviewer_id=auth()->user()->id;
+
+        $loanApplication->save();
+        $paymentSchedule = DB::table('repayment_schedules')
+            ->where('loan_id', $loanApplication->id)
+            ->where('status', 'pending')
+            ->orderBy('due_date', 'asc')
+            ->first();
+        // Create the actual loan record
+        $loan = Loan::create([
+            'loan_application_id' => $id,
+            'user_id' => $loanApplication->user_id,
+            'loan_type' => $loanApplication->loan_type,
+            'loan_amount' => $loanApplication->loan_amount,
+            'interest_rate' => 5.0, // This could be dynamic based on your rules
+            'loan_term' => 12, // This could also be dynamic    
+            'collateral' => $loanApplication->collateral,
+            'approved_amount' => $loanApplication->loan_amount,
+            'remaining_balance' => $loanApplication->loan_amount,
+            'status' => 'approved',
+            'approver_id' => auth()->user()->id,
+            'processed_at' => now(),
+            'approval_comments'=>$request->approval_comments,
+            'approved_at'=>Now(),
+            'next_payment_date'=> $paymentSchedule->due_date,
+            'installment_frequency'=>2,
+
+        ]);
+// 3. Update customer account (assuming you have a Customer model)
+        $customer = $loanApplication->user->customer;
+
+
+        // 4. Create disbursement (waiting for approval)
+      $payment=  LoanDisbursement::create([
+            'loan_id'     => $loan->id,
+            'disbursed_amount'      => $loanApplication->loan_amount,
+            'status'      => 'waiting_for_approval',
+
+            'payment_reference'=>$customer->customer_code,
+            'approver_id'  => Auth::id(),
+            'created_at'  => now(),
+        ]);
+              
+
+            
+         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        return redirect()->route('admin.dashboard')->with('success', 'Loan approved successfully.');
     }
 
     /**

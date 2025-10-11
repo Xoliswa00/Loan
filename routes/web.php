@@ -10,6 +10,7 @@ use App\Http\Controllers\AccountDetailController;
 use App\Http\Controllers\LoanInterestController;
 use App\Http\Controllers\RepaymentScheduleController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DisbursementController;
 
 use Illuminate\Support\Facades\Gate;
 
@@ -39,7 +40,7 @@ Route::get('/dashboard', function () {
     if (is_null($user->rule_id)) {
         return view('dashboard'); // Regular user view
     } else {
-        return redirect()->route('Admin.index'); // Admin dashboard route
+        return redirect()->route('admin.dashboard'); // Admin dashboard route
     }
 })->middleware(['auth'])->name('dashboard');
 
@@ -87,9 +88,23 @@ Route::get('/loans', [LoanController::class, 'index'])->name('loans');
 Route::get('/loanapplications', [LoanApplicationController::class, 'index'])->name('loanapplications');
 Route::get('/loanrepayments', [LoanRepaymentController::class, 'index'])->name('loanrepayments');
 
- Route::get('/Admin', [AdminController::class, 'Loans'])->name('Admin.Loans');
-  Route::get('/Admins', [AdminController::class, 'index'])->name('Admin.index');
 
+
+
+
+ Route::get('/Admin', [AdminController::class, 'Loans'])->name('admin.loans');
+  Route::get('/Admins', [AdminController::class, 'index'])->name('admin.dashboard');
+        Route::get('/Admind', [AdminController::class, 'Disbursement'])->name('Admin.Disbursement');
+
+
+
+Route::middleware(['auth'])->prefix('admin/disbursements')->name('disbursements.')->group(function () {
+    Route::get('/', [DisbursementController::class, 'index'])->name('index');
+    Route::post('/{id}/approve', [DisbursementController::class, 'approve'])->name('approve');
+    Route::post('/{id}/reject', [DisbursementController::class, 'reject'])->name('reject');
+    Route::post('/{id}/release', [DisbursementController::class, 'release'])->name('release');
+    Route::post('/approve-all', [DisbursementController::class, 'approveAll'])->name('approveAll');
+});
 
 
 

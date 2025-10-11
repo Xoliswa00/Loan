@@ -21,5 +21,11 @@ class LoanFee extends Model
 
         'total_due'
 ];
+    public function loanApplication()
+    {
+        return $this->belongsTo(LoanApplication::class);
+    }
+
+    
 
 }

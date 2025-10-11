@@ -15,12 +15,13 @@ return new class extends Migration
             $table->id();
             $table->foreignId('loan_id')->constrained('loans');  // Foreign key to loan table
             $table->decimal('disbursed_amount', 15, 2);  // Amount disbursed to the customer
-            $table->enum('disbursement_method', ['bank_transfer', 'cash', 'check', 'other']);  // Method of disbursement
-            $table->date('disbursement_date');  // Date of disbursement
+            $table->enum('disbursement_method', ['bank_transfer', 'cash', 'check', 'other'])->default('bank_transfer');  // Method of disbursement
+            $table->date('disbursement_date')->default(Now());  // Date of disbursement
             $table->foreignId('approver_id')->constrained('users');  // The ID of the user who approved the disbursement
             $table->string('payment_reference')->nullable();  // Payment reference, for tracking the payment
             $table->string('proof_of_payment')->nullable();  // File path to proof of payment (e.g., screenshot, PDF)
             $table->foreignId('payment_realiser_id')->nullable()->constrained('users');  // The ID of the user who processed the payment (the payment realiser)
+            $table->enum('status', ['waiting_for_approval', 'approved', 'rejected', 'disbursed'])->default('waiting_for_approval'); // Status of the disbursement
             $table->timestamps();
         });
     }

@@ -8,7 +8,9 @@ use App\Http\Requests\UpdateAdminRequest;
 use App\Models\Customer;
 use App\Models\RepaymentSchedule;
 use App\Models\LoanApplication;
-
+use App\Models\LoanDisbursement;
+use App\Models\Loan;
+use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
@@ -22,6 +24,7 @@ class AdminController extends Controller
             'pendingLoansCount' => LoanApplication::where('status', 'pending')->count(),
             'customerCount' => Customer::count(),
             'todaysRepayments' => RepaymentSchedule::whereMonth('due_date', now()->month)->sum('emi_amount'),
+            'totalLoansDisbursed' => LoanDisbursement::where('status', 'waiting_for_approval')->count(),
         ]);
     }
 
@@ -30,7 +33,7 @@ class AdminController extends Controller
 
           $pendingApplications = LoanApplication::with('user')
             ->where('status', 'pending')
-            ->latest()
+           // ->latest()
             ->paginate(15);
 
         return view('admin.loan_applications.index', compact('pendingApplications'));
@@ -93,5 +96,15 @@ class AdminController extends Controller
     public function destroy(Admin $admin)
     {
         //
+    }
+
+    //loan disbursement waiting for approval
+
+    public function Disbursement()
+    {
+        $disbursements = LoanDisbursement::where('Status', 'waiting_for_approval')->get();
+        return view('admin.loans.payments', compact('disbursements'));
+      
+    
     }
 }

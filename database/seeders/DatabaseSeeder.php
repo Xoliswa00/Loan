@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\chart_of_accounts;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -20,7 +22,11 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
+    CompaniesSeeder::class,
     LoanFeeRulesSeeder::class,
+    ChartOfAccountsSeeder::class,
+    BranchesSeeder::class,
+    GlmappingSeeder::class,
 ]);
 
     }

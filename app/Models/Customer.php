@@ -15,7 +15,7 @@ class Customer extends Model
         'payment_terms',
         'status',
         'credit_limit',
-        'balance',
+        'current_balance',
         'notes',
     ];
 
@@ -26,6 +26,38 @@ class Customer extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function invoices()
+    {
+        return $this->hasMany(arinvoices::class);
+    }
+
+     public function payments()
+    {
+        return $this->hasMany(arpayment::class);
+    }
+
+     public function loans()
+    {
+        return $this->hasMany(LoanApplication::class, 'user_id', 'user_id');
+    }
+    public function ARFlag()
+    {
+        return $this->hasMany(ARFlags::class);
+    }
+
+
+
+     public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+     public function loansApproved()
+    {
+        return $this->hasMany(LoanApplication::class, 'reviewer_id', 'user_id');
+    }
+
 
     /**
      * Scope for active customers.

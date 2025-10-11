@@ -144,9 +144,9 @@ public function store(Request $request)
         'purpose' => 'nullable|string',
         'other_purpose' => 'nullable|string',
         'collateral' => 'nullable|string',
-        'credit_score_report' => 'nullable|file|mimes:pdf',
-        'bank_statement' => 'nullable|file|mimes:pdf',
-        'payslips' => 'nullable|file|mimes:pdf',
+        'credit_score_report' => 'nullable|file',
+        'bank_statement' => 'required|file',
+        'payslips' => 'required|file',
         'terms_conditions' => 'accepted',
     ]);
 
@@ -159,10 +159,11 @@ public function store(Request $request)
     $now = now();
     $interestRate = 0.05;
 
-    if ($firstLoan) {
-        $diffMonths = $firstLoan->approved_at->diffInMonths($now);
-        $interestRate = $diffMonths <= 12 ? 0.03 : 0.05;
-    }
+ if ($firstLoan) {
+    $approvedAt = Carbon::parse($firstLoan->approved_at);
+    $diffMonths = $approvedAt->diffInMonths(now());
+    $interestRate = $diffMonths <= 12 ? 0.03 : 0.05;
+}
 
     // Step 2: Calculate Fees
     $interest = $loanAmount * $interestRate;
@@ -181,6 +182,7 @@ public function store(Request $request)
     $application->collateral = $validated['collateral'] ?? null;
     $application->terms_conditions = true;
     $application->status = 'pending';
+    $application->reviewer_id=Auth::user()->id;
 
     if ($request->hasFile('credit_score_report')) {
         $application->credit_score_report = $request->file('credit_score_report')->store('credit_score_reports');
@@ -211,7 +213,7 @@ public function store(Request $request)
     $existingCustomer = Customer::where('user_id', $user->id)->first();
 
 if (!$existingCustomer) {
-    $idNumber = preg_replace('/[^0-9]/', '', $user->id_number ?? '000000');
+    $idNumber = preg_replace('/[^0-9]/', '', $user->ID_Number ?? '000000');
     $prefix = 'CLH';
     $shortId = substr($idNumber, 0, 6);
     $customerCode = $prefix . $user->id . '-' . $shortId;

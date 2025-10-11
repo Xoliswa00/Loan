@@ -18,7 +18,14 @@ class Loan extends Model
         'collateral',
         'status',
         'approved_amount',
-        'disbursed_date',
+        'disbursed_date','loan_application_id',
+        'remaining_balance',
+        'approver_id',
+        'processed_at',
+        'approval_comments',
+        'approved_at',
+        'next_payment_date',
+        'installment_frequency',    
     ];
     public function user()
     {
@@ -29,6 +36,11 @@ class Loan extends Model
     {
         return $this->belongsTo(LoanApplication::class);
     }
+    public function application()
+{
+    return $this->belongsTo(LoanApplication::class, 'loan_application_id');
+}
+
     
   
 
@@ -46,6 +58,11 @@ class Loan extends Model
     {
         return $this->hasOne(LoanInterest::class);
     }
+    public function customer() {
+    return $this->belongsTo(Customer::class);
+}
+
+
 
     public function repaymentSchedules()
     {
@@ -53,7 +70,7 @@ class Loan extends Model
     }
 
     public function fees() {
-    return $this->hasMany(LoanFee::class);
+    return $this->hasOne(LoanFee::class);
 }
 
 }

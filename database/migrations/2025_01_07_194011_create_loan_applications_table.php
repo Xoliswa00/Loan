@@ -19,7 +19,7 @@ return new class extends Migration
             $table->enum('loan_type', ['personal', 'home', 'business']); // Type of loan
             $table->decimal('loan_amount', 15, 2); // Loan amount with 2 decimal places
             $table->text('purpose'); // Purpose of the loan
-            $table->text('reason'); // Purpose of the loan
+            $table->text('reason')->nullable(); // Purpose of the loan
 
             $table->text('collateral')->nullable(); // Collateral information (optional)
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending'); // Application status

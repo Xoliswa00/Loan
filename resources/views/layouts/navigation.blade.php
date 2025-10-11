@@ -19,11 +19,11 @@
                                   
             
                                 
-                                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('admin.dashboard')">
+                                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                                         {{ __('🛠️ Admin Dashboard') }}
                                     </x-nav-link>
 
-                                    <x-nav-link :href="route('loan.index')" :active="request()->routeIs('admin.loans.*')">
+                                    <x-nav-link :href="route('admin.loans')" :active="request()->routeIs('admin.loans.*')">
                                         {{ __('📄 Loan Approvals') }}
                                     </x-nav-link>
 
@@ -157,24 +157,24 @@
                         {{ __('🛠️ Admin Dashboard') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('admin.loans.index')" :active="request()->routeIs('admin.loans.*')">
+                    <x-nav-link :href="route('admin.loans')" :active="request()->routeIs('admin.loans.*')">
                         {{ __('📄 Loan Approvals') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('admin.repayments.index')" :active="request()->routeIs('admin.repayments.*')">
+                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.repayments.*')">
                         {{ __('💸 Repayments') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('admin.customers.index')" :active="request()->routeIs('admin.customers.*')">
+                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.customers.*')">
                         {{ __('👤 Customers') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('admin.gl.index')" :active="request()->routeIs('admin.gl.*')">
+                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.gl.*')">
                         {{ __('📊 GL Reports') }}
                     </x-nav-link>
 
                     @if(Auth::user()->role === 'owner')
-                        <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.users.*')">
                             {{ __('⚙️ User Management') }}
                         </x-nav-link>
                     @endif

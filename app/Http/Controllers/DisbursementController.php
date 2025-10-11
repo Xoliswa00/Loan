@@ -2,11 +2,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\LoanDisbursement;
+use app\Services\DisbursementService;
+
 use App\Models\Loan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
 
 class DisbursementController extends Controller
 {
+protected $disbursementService;
+
+    public function __construct(DisbursementService $disbursementService)
+    {
+        $this->disbursementService = $disbursementService;
+    }
+
+
     /**
      * Display a listing of the resource.
      */
@@ -125,4 +140,103 @@ class DisbursementController extends Controller
 
         return redirect()->route('disbursements.index')->with('success', 'Disbursement deleted successfully.');
     }
+
+    
+ public function approve($id)
+    {
+  $user = auth()->user();
+
+        try {
+            $disbursement = $this->disbursementService->approveAndPost($id, $user->id);
+
+  
+
+            return redirect()->back()->with('success', 'Disbursement approved and GL posted.');
+        } catch (\Exception $e) {
+            Log::error('Disbursement approve error: '.$e->getMessage(), ['id'=>$id]);
+            return redirect()->back()->with('error', 'Failed to approve disbursement: '.$e->getMessage());
+        }
+
+
+     
+
+
+
+
+
+       
+    }
+
+    /**
+     * Reject a disbursement
+     */
+    public function reject(Request $request, $id)
+    {
+        $disbursement = LoanDisbursement::findOrFail($id);
+
+        if ($disbursement->status !== 'waiting_for_approval') {
+            return back()->with('error', 'This disbursement cannot be rejected.');
+        }
+
+        $disbursement->update([
+            'status' => 'rejected',
+            'rejected_by' => Auth::id(),
+            'rejected_at' => now(),
+            'rejection_reason' => $request->input('rejection_reason', 'No reason provided'),
+        ]);
+
+        return back()->with('success', 'Disbursement rejected successfully.');
+    }
+
+    /**
+     * Release funds
+     */
+    public function release($id)
+    {
+        $disbursement = LoanDisbursement::findOrFail($id);
+
+        if ($disbursement->status !== 'approved') {
+            return back()->with('error', 'This disbursement cannot be released.');
+        }
+
+        $disbursement->update([
+            'status' => 'released',
+            'released_by' => Auth::id(),
+            'released_at' => now(),
+        ]);
+
+        // You could also trigger actual fund transfer logic here.
+
+        return back()->with('success', 'Funds released successfully.');
+    }
+
+    /**
+     * Bulk approve all pending disbursements
+     */
+    public function approveAll()
+    {
+        $pending = LoanDisbursement::where('status', 'waiting_for_approval')->get();
+
+        if ($pending->isEmpty()) {
+            return back()->with('error', 'No pending disbursements found.');
+        }
+
+        foreach ($pending as $disbursement) {
+            $disbursement->update([
+                'status' => 'approved',
+                'approved_by' => Auth::id(),
+                'approved_at' => now(),
+            ]);
+        }
+
+        return back()->with('success', count($pending) . ' disbursement(s) approved successfully.');
+    }
+
+
+
+
+
+
+
+
 }

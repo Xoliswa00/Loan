@@ -3,6 +3,10 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Models\Branches;
+use App\Models\chart_of_accounts;
+use App\Observers\charts_of_accounts;
+use App\Observers\CreatedBranch;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -12,6 +16,10 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         //
+    
+
+
+
     }
 
     /**
@@ -20,5 +28,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
+       branches::observe(CreatedBranch::class);
+    chart_of_accounts::observe(charts_of_accounts::class);
+
     }
 }

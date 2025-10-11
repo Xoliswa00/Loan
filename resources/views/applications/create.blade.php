@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        <h2 class="font-semibold text-xl text-white-800 dark:text-white-200 leading-tight">
             {{ __('Loan Applications') }}
         </h2>
     </x-slot>
@@ -8,7 +8,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
+                <div class="p-6 text-gray-900 dark:text-white">
                     <div class="container mx-auto mt-8">
                         <h1 class="text-3xl font-semibold">Create Loan Application</h1>
 
@@ -22,8 +22,8 @@
                             @csrf
 
                             <div class="form-group mt-4">
-                                <label for="loan_type" class="block text-gray-700">Loan Type:</label>
-                                <select name="loan_type" id="loan_type" class="form-control text-dark block w-full mt-1 border-gray-300 rounded-md shadow-sm" required>
+                                <label for="loan_type" class="block text-white-700">Loan Type:</label>
+                                <select name="loan_type" id="loan_type" class="form-control text-black block w-full mt-1 border-gray-300 rounded-md shadow-sm" required>
                                     <option value="">-- Select Loan Type --</option>
                                     <option value="personal">Personal</option>
                                     <option value="home">Home</option>
@@ -32,8 +32,8 @@
                             </div>
 
                             <div class="form-group mt-4">
-                                <label for="purpose" class="block text-gray-700">Purpose:</label>
-                                <select name="purpose" id="purpose" class="form-control block w-full mt-1 border-gray-300 rounded-md shadow-sm" onchange="handlePurposeChange(this)" required>
+                                <label for="purpose" class="block text-white-700">Purpose:</label>
+                                <select name="purpose" id="purpose" class="form-control block w-full mt-1 border-gray-300 text-black rounded-md shadow-sm" onchange="handlePurposeChange(this)" required>
                                     <option value="">-- Select Purpose --</option>
                                     <option value="Debt Consolidation">Debt Consolidation</option>
                                     <option value="Emergency Medical Expenses">Emergency Medical Expenses</option>
@@ -49,36 +49,34 @@
                             </div>
 
                             <div id="other_purpose_div" class="form-group mt-4 hidden">
-                                <label for="other_purpose" class="block text-gray-700">Specify Other Purpose:</label>
-                                <input type="text" id="other_purpose" name="other_purpose" class="form-control block w-full mt-1 border-gray-300 rounded-md shadow-sm">
+                                <label for="other_purpose" class="block text-white-700">Specify Other Purpose:</label>
+                                <input type="text" id="other_purpose" name="other_purpose" class="form-control block w-full mt-1 border-gray-300 text-blackrounded-md shadow-sm">
                             </div>
 
                             <div class="form-group mt-4">
-                                <label for="collateral" class="block text-gray-700">Collateral:</label>
-                                <input type="text" name="collateral" id="collateral" class="form-control block w-full mt-1 border-gray-300 rounded-md shadow-sm">
+                                <label for="collateral" class="block text-white-700">Collateral:</label>
+                                <input type="text" name="collateral" id="collateral" class="form-control block w-full mt-1 text-black border-gray-300 rounded-md shadow-sm">
                             </div>
 
                             <div class="form-group mt-4">
-                                <label for="loan_amount" class="block text-gray-700">Loan Amount:</label>
-                                <input type="number" name="loan_amount" id="loan_amount" class="form-control block w-full mt-1 border-gray-300 rounded-md shadow-sm" value="{{ old('loan_amount') }}" required>
+                                <label for="loan_amount" class="block text-white-700">Loan Amount:</label>
+                                <input type="number" name="loan_amount" id="loan_amount" class="form-control block w-full mt-1 text-black border-gray-300 rounded-md shadow-sm" value="{{ old('loan_amount') }}" required>
                             </div>
 
                             <div class="form-group mt-4">
-                                <label for="months" class="block text-gray-700">Repayment Period (Months):</label>
-                                <select name="months" id="months" class="form-control block w-full mt-1 border-gray-300 rounded-md shadow-sm" required>
+                                <label for="months" class="block text-white-700">Repayment Period (Months):</label>
+                                <select name="months" id="months" class="form-control block w-full mt-1 text-black border-gray-300 rounded-md shadow-sm" required>
                                     <option value="">-- Select Months --</option>
                                     <option value="1">1 Month</option>
                                     <option value="2">2 Months</option>
-                                    <option value="3">3 Months</option>
-                                    <option value="5">5 Months</option>
-                                    <option value="6">6 Months</option>
+                                    
                                 </select>
                             </div>
                             <div class="form-group mt-4">
-    <label for="bank_account_id" class="block text-gray-700">Bank Account:</label>
+    <label for="bank_account_id" class="block text-white-700">Bank Account:</label>
 
     @if($hasBankAccounts)
-        <select name="bank_account_id" id="bank_account_id" class="form-control block w-full mt-1 border-gray-300 rounded-md shadow-sm" required>
+        <select name="bank_account_id" id="bank_account_id" class="form-control block text-black w-full mt-1 border-gray-300 rounded-md shadow-sm" required>
             <option value="">-- Select Bank Account --</option>
             @foreach($userBankAccounts as $account)
                 <option value="{{ $account->id }}">
@@ -100,7 +98,7 @@
 
 
 
-                            <div id="loan_summary" class="mt-6 bg-white-800 text-black rounded-lg shadow-lg hidden">
+                            <div id="loan_summary" class="mt-6 bg-white-800 text-white rounded-lg shadow-lg hidden">
                                 <h3 class="text-2xl font-semibold mb-4">Loan Details Summary</h3>
                                 <div class="mb-2"><strong>Loan Amount:</strong> R<span id="summaryAmount">0.00</span></div>
                                 <div class="mb-2"><strong>Interest:</strong> R<span id="summaryInterest">0.00</span></div>
@@ -119,22 +117,22 @@
                             <input type="hidden" name="total_repayment" id="total_repayment">
 
                             <div class="form-group mt-4">
-                                <label for="credit_score_report" class="block text-gray-700">Credit Score Report:</label>
+                                <label for="credit_score_report" class="block text-white-700">Credit Score Report:</label>
                                 <input type="file" name="credit_score_report" id="credit_score_report" class="form-control block w-full mt-1 border-gray-300 rounded-md shadow-sm">
                             </div>
                             <div class="form-group mt-4">
-                                <label for="bank_statement" class="block text-gray-700">Bank Statement:</label>
+                                <label for="bank_statement" class="block text-white-700"> 3 Months Bank Statement:</label>
                                 <input type="file" name="bank_statement" id="bank_statement" class="form-control block w-full mt-1 border-gray-300 rounded-md shadow-sm">
                             </div>
                             <div class="form-group mt-4">
-                                <label for="payslips" class="block text-gray-700">Payslips:</label>
+                                <label for="payslips" class="block text-white-700">Payslips:</label>
                                 <input type="file" name="payslips" id="payslips" class="form-control block w-full mt-1 border-gray-300 rounded-md shadow-sm">
                             </div>
 
                             <div class="form-group mt-4">
                                 <div class="flex items-center">
                                     <input type="checkbox" name="terms_conditions" value="1" id="terms_conditions" class="form-check-input" required>
-                                    <label for="terms_conditions" class="ml-2 text-gray-700">I accept the <a href="#" class="text-blue-500">terms and conditions</a></label>
+                                    <label for="terms_conditions" class="ml-2 text-white-700">I accept the <a href="#" class="text-blue-500">terms and conditions</a></label>
                                 </div>
                             </div>
 

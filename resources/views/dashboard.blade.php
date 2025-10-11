@@ -16,19 +16,26 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
                         <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow-md">
                             <h4 class="text-md font-semibold text-indigo-600 dark:text-indigo-300">Current Loan</h4>
-                            <p class="text-2xl font-bold mt-2">R15,000</p>
+                            <p class="text-2xl font-bold mt-2">{{ Auth::user()->customer->current_balance ?? 0, 2 }}</p>
                             <p class="text-xs text-gray-600 dark:text-gray-400">Outstanding Balance</p>
                         </div>
+                        @php
+    $loan = Auth::user()->loans()->where('status', 'approved')->latest()->first();
+    $nextPayment = $loan ? $loan->repaymentSchedules()->where('status', 'pending')->orderBy('due_date')->first() : null;
+@endphp
+
+
 
                         <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow-md">
                             <h4 class="text-md font-semibold text-green-600 dark:text-green-300">Account Balance</h4>
-                            <p class="text-2xl font-bold mt-2">R2,500</p>
+                            <p class="text-2xl font-bold mt-2">    R{{ number_format($nextPayment->emi_amount ?? 0, 2) }}
+</p>
                             <p class="text-xs text-gray-600 dark:text-gray-400">Available Funds</p>
                         </div>
 
                         <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow-md">
                             <h4 class="text-md font-semibold text-yellow-600 dark:text-yellow-300">Next Payment</h4>
-                            <p class="text-2xl font-bold mt-2">5 July 2025</p>
+                            <p class="text-2xl font-bold mt-2">{{ $nextPayment ? $nextPayment->due_date->format('d M Y') : 'N/A' }}</p>
                             <p class="text-xs text-gray-600 dark:text-gray-400">Scheduled Date</p>
                         </div>
 

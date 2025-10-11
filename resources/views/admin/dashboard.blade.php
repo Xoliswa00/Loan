@@ -19,17 +19,23 @@
                             <p class="text-2xl font-bold mt-2">{{ $pendingLoansCount ?? '0' }}</p>
 
 
-                             <a href="{{ route('Admin.Loans') }}" class="p-4 rounded-lg shadow hover:shadow-md transition">
+                             <a href="{{ route('admin.loans') }}" class="p-4 rounded-lg shadow hover:shadow-md transition">
+                            <h4 class="font-semibold text-indigo-700 dark:text-indigo-200">Loan Applications</h4>
+                            <p class="text-xs text-gray-600 dark:text-gray-400">Applications to Review</p>
+                        </a>
+                        </div>
+                           <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow-md">
+                            <h4 class="text-md font-semibold text-indigo-600 dark:text-indigo-300">Pending Payments</h4>
+                            <p class="text-2xl font-bold mt-2">{{ $totalLoansDisbursed ?? '0' }}</p>
+
+
+                             <a href="{{ route('Admin.Disbursement') }}" class="p-4 rounded-lg shadow hover:shadow-md transition">
                             <h4 class="font-semibold text-indigo-700 dark:text-indigo-200">Loan Applications</h4>
                             <p class="text-xs text-gray-600 dark:text-gray-400">Applications to Review</p>
                         </a>
                         </div>
 
-                        <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow-md">
-                            <h4 class="text-md font-semibold text-green-600 dark:text-green-300">Total Customers</h4>
-                            <p class="text-2xl font-bold mt-2">{{ $customerCount ?? '0' }}</p>
-                            <p class="text-xs text-gray-600 dark:text-gray-400">Registered Borrowers</p>
-                        </div>
+                  
 
                         <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow-md">
                             <h4 class="text-md font-semibold text-yellow-600 dark:text-yellow-300">Repayments this Month</h4>
@@ -37,11 +43,7 @@
                             <p class="text-xs text-gray-600 dark:text-gray-400">Expected this month</p>
                         </div>
 
-                        <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow-md">
-                            <h4 class="text-md font-semibold text-red-600 dark:text-red-300">GL Journal Entries</h4>
-                            <p class="text-2xl font-bold mt-2">{{ $glEntryCount ?? '0' }}</p>
-                            <p class="text-xs text-gray-600 dark:text-gray-400">This Financial Period</p>
-                        </div>
+                       
                     </div>
 
                     <!-- Navigation Links -->
